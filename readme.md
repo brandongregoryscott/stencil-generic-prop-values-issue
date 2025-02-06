@@ -2,13 +2,13 @@ Minimal reproduction repo for an issue with generating the `values` for a union-
 
 While this is a minimal reproduction of the issue, there's a few things that I've observed that together cause it:
 
-1. The types are imported from another file (for this example, they are imported from [src/types.ts](./src/types.ts))
-   a. `values` seem to be generated fine if all of the types involved are defined within the component file
-1. The type of the prop is a union of at least two values
-   a. `values` seems to be generated fine if the generic type is used alone, i.e. `@Prop() color: AllowedColor<\`${ColorName}-${ColorShadeName}\`>`
-1. The provided type for the generic is a [template literal type](https://www.typescriptlang.org/docs/handbook/2/template-literal-types.html)
-1. The number of expanded values for the template literal value hits some limit
-   a. It's not clear what that limit is, but I provided some examples in [src/types.ts](./src/types.ts) with alternate combinations of the `ColorName` and `ColorShadeName` types where this issue does not happen
+- The types are imported from another file (for this example, they are imported from [src/types.ts](./src/types.ts))
+  - `values` seem to be generated fine if all of the types involved are defined within the component file
+- The type of the prop is a union of at least two values
+  - `values` seems to be generated fine if the generic type is used alone, i.e. `` @Prop() color: AllowedColor<`${ColorName}-${ColorShadeName}`> ``
+- The provided type for the generic is a [template literal type](https://www.typescriptlang.org/docs/handbook/2/template-literal-types.html)
+- The number of expanded values for the template literal value hits some limit
+  - It's not clear what that limit is, but I provided some examples in [src/types.ts](./src/types.ts) with alternate combinations of the `ColorName` and `ColorShadeName` types where this issue does not happen
 
 The issue can be observed in the generated `docs.json` file from the `docs-json` output target. For the `color` prop in the starter component, the `values` array which should contain an enumerated list of possible types + values for the prop, there is a mangled set of values that look like they are being split on the `|`, including parts of the generic `AllowedColors`.
 
